@@ -211,13 +211,47 @@ class Player(){
             ...
         }
         
-        void ChangeState(){
-            playerState = idleState;
+        void ChangeState(PlayerState ps){
+            playerState = ps;
         }
 
-    private:
         PlayerState* idleState;
         ...
+
+    private:
         PlayerState* playerState;
+}
+```
+然后在状态类中这样调用：
+```
+class IdleState : PlayerState {
+    public:
+        override void HandleInput(Player player){
+            if(Input == PRESS_D){
+                player.ChangeState(player.walkState);
+            }
+        }
+};
+```
+#### 2.2.4、状态进出和退出行为
+说到这里就基本介绍完状态模式中的有限状态机了，最后我们可以给状态定义一个进入行为和退出行为，比如我们进入攻击状态时播放一个音效，从跳跃状态到站立状态时播放落地动画，我们仅需要在基类中添加两个虚函数：
+```
+class PlayerState(){
+
+    public:
+        virtual void StartAction(){}
+        virtual void EndAction(){}
+
+}
+```
+然后在改变状态时：
+```
+class Player(){
+    public:
+        void Change(PlayerState ps){
+            playerState->EndAction();
+            playerState = ps;
+            playerState->StartAction();
+        }
 }
 ```
