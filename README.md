@@ -27,7 +27,7 @@
          //move to left
          //set graphics move
      }
-     else if(input == PRESS_SPACE){
+     else if(input == PRESS_W){
          //jump
          //set graphics jump
      }
@@ -47,7 +47,7 @@
          //move to left
          if(!isJumping) //set graphics move
      }
-     else if(input == PRESS_SPACE){
+     else if(input == PRESS_W){
          //jump
          //set graphics jump
          isJumping = true;
@@ -162,5 +162,12 @@ class JumpState : PlayerState{
         void AutoDrop(Player player){
             player.yVelocity-= 1f;
         }
+};
+```
+以上给出了跳跃类的大致实现，其封装了跳跃时需要处理的行为以及其私有的变量，其他状态也像它一样定义自己的类。这样当我们的输入处理出现某一个bug时，我们需要修改的就只有出现问题的状态了，而且不会影响到状态。  
+接下来我们只需要在Player类中定义一个指向PlayerState的指针，如下：
+```
+class Player{
+
 };
 ```
