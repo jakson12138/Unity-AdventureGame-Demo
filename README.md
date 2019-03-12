@@ -107,13 +107,60 @@ switch(playerState){
 ```
 class PlayerState{
     
-    virtual void Update(Player player){
+    public:
+        PlayerState(){
+            directionLeft = false;
+        }
     
-    }
+        virtual void Update(Player player){
     
-    virtual void HandleInput(Player player){
+        }
     
-    }
+        virtual void HandleInput(Player player){
     
+        }
+    
+    private:
+        bool directionLeft; //主角朝向
+    
+};
+```
+之后对于每一个状态，我们继承这个基类并重载其虚函数，比如跳跃状态：
+```
+class JumpState : PlayerState{
+
+    public:
+    
+        JumpState(){
+            doubleJump = true;
+        }
+    
+        override void Update(Player player){
+            AutoDrop(player); //跳跃状态时自由下落
+            HandleInput(player);
+        }
+        
+        override void HandleInput(Player player){
+            if(Input == PRESS_D){
+                //move to right
+            }
+            else if(Input == PRESS_A){
+                //move to left
+            }
+            
+            if(Input == PRESS_W){
+                if(doubleJump){
+                    //double jump
+                    doubleJump = false;
+                }
+            }
+        }
+        
+    private:  
+        bool doubleJump; //可否二段跳
+        
+        void AutoDrop(Player player){
+            player.yVelocity-= 1f;
+        }
 };
 ```
