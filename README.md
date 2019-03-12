@@ -120,7 +120,7 @@ class PlayerState{
     
         }
     
-    private:
+    protected:
         bool directionLeft; //主角朝向
     
 };
@@ -143,9 +143,11 @@ class JumpState : PlayerState{
         override void HandleInput(Player player){
             if(Input == PRESS_D){
                 //move to right
+                this.directionLeft = false;
             }
             else if(Input == PRESS_A){
                 //move to left
+                this.directionLeft = true;
             }
             
             if(Input == PRESS_W){
@@ -167,7 +169,21 @@ class JumpState : PlayerState{
 以上给出了跳跃类的大致实现，其封装了跳跃时需要处理的行为以及其私有的变量，其他状态也像它一样定义自己的类。这样当我们的输入处理出现某一个bug时，我们需要修改的就只有出现问题的状态了，而且不会影响到状态。  
 接下来我们只需要在Player类中定义一个指向PlayerState的指针，如下：
 ```
-class Player{
-
+class Player : MonoBehavior {
+    public:
+        void Update(){
+            playerState->Update();
+        }
+        
+        void ChangeState(){
+            //change playerState
+        }
+        
+    private:
+        PlayerState* playerState;
 };
 ```
+接下来需要解决的问题是，我们应该把状态保存在哪里？  
+a、角色改变状态时创建一个状态类实例  
+b、静态状态  
+c、放在Player类里  
