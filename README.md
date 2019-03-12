@@ -183,7 +183,41 @@ class Player : MonoBehavior {
         PlayerState* playerState;
 };
 ```
-接下来需要解决的问题是，我们应该把状态保存在哪里？  
+接下来需要解决的问题是，我们应该把状态保存在哪里？
+#### 2.2.3、状态实例
 a、角色改变状态时创建一个状态类实例  
 b、静态状态  
 c、放在Player类里  
+a方法很自然，当需要某个状态时，我们new一个实例赋值给playerState，然后当跳出这个状态时，再delete它。这种方法的缺点在于，当角色在游戏中频繁改变其状态时，我们会重复创建和销毁状态实例，这将导致内存碎片的产生。  
+b方法可以简单的实现，把静态对象放置的哪里可以由自己决定，我们可以把它放置在基类中，如：
+```
+class PlayerState(){
+    public:
+        static IdleState* idleState;
+        ...
+}
+```
+我们可以简单的用下面语句改变状态:
+```
+playerState = PlayerState::idleState;
+```
+当然，这在只有一个角色的时候可以很好的运行，但是当你要支持双人游玩的时候，这种方法就行不通了！！！  
+于是我们使用c方法，我们将状态实例放到Player类中，如：
+```
+class Player(){
+    public:
+        Player(){
+            idleState = new IdleState();
+            ...
+        }
+        
+        void ChangeState(){
+            playerState = idleState;
+        }
+
+    private:
+        PlayerState* idleState;
+        ...
+        PlayerState* playerState;
+}
+```
